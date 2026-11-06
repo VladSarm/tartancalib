@@ -25,7 +25,13 @@ To use the Dockerfiles provided in this repository, ensure that you have [Docker
             -v "/tmp/.X11-unix:/tmp/.X11-unix:rw" \
             -v "$FOLDER:/data" tartancalib
 
-3. When in the Docker container, follow the [Usage](#usage) section of this readme to run calibration commands.
+3. Inside the container, run `source /catkin_ws/devel/setup.bash`, then follow the [Usage](#usage) section to run calibration commands.
+
+The Ubuntu 20.04 image includes `python3-dill`, which is required by
+`tartan_calibrate`. After updating the Dockerfile, rebuild the image and start a
+new container; existing containers keep their original dependencies. To repair
+an already running older container, run `apt-get update && apt-get install -y
+python3-dill` inside it.
 
 ### Local Installation
 TartanCalib and Kalibr are integrated within ROS. Ensure that you have ROS installed within your system.

@@ -31,6 +31,13 @@ ADD . $WORKSPACE/src/kalibr
 RUN	cd $WORKSPACE &&\
 	catkin build -j$(nproc)
 
+# Runtime dependency imported by tartan_calibrate (not checked by catkin).
+RUN apt-get update && apt-get install -y --no-install-recommends python3-dill && \
+	rm -rf /var/lib/apt/lists/*
+
+# Catch missing Python runtime dependencies while building the image.
+RUN /bin/bash -c 'source /catkin_ws/devel/setup.bash && MPLBACKEND=Agg python3 -c "import runpy; runpy.run_path(\"/catkin_ws/src/kalibr/aslam_offline_calibration/kalibr/python/tartan_calibrate\", run_name=\"dependency_check\")"'
+
 
 # When a user runs a command we will run this code before theirs
 # This will allow for using the manual focal length if it fails to init
